@@ -6,9 +6,9 @@ export async function POST(request: Request) {
 
     console.log(phone, password)
 
-    const student = await prisma.student.findUnique({
+    const student = await prisma.student.findFirst({
       where: {
-        phone
+        phone: phone
       }
     })
 

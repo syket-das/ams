@@ -54,17 +54,20 @@ export default function Page() {
               </div>
             </div>
           </div>
-          <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center'>
-            <div className='flex h-[180px] flex-col justify-center gap-y-4 items-center rounded-md p-6'>
-              <TbBrandNextjs size={40} />
-              <div className='space-y-2'>
-                <h3 className='font-bold leading-normal'>View Students</h3>
-                <p className='text-sm text-muted-foreground'>
-                  View students in the database
-                </p>
+          <Link href='/student/view'>
+            <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center'>
+              <div className='flex h-[180px] flex-col justify-center gap-y-4 items-center rounded-md p-6'>
+                <TbBrandNextjs size={40} />
+                <div className='space-y-2'>
+                  <h3 className='font-bold leading-normal'>View Students</h3>
+                  <p className='text-sm text-muted-foreground'>
+                    View students in the database
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
+
           <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center'>
             <div className='flex h-[180px] flex-col justify-center gap-y-4 items-center rounded-md p-6'>
               <TbBrandNextjs size={40} />
