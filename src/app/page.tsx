@@ -43,17 +43,19 @@ export default function Page() {
               </div>
             </div>
           </Link>
-          <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center'>
-            <div className='flex h-[180px] flex-col justify-center gap-y-4 items-center rounded-md p-6'>
-              <TbBrandNextjs size={40} />
-              <div className='space-y-2'>
-                <h3 className='font-bold leading-normal'>Add Teacher</h3>
-                <p className='text-sm text-muted-foreground'>
-                  Add teacher to the database
-                </p>
+          <Link href='/faculty/add'>
+            <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center'>
+              <div className='flex h-[180px] flex-col justify-center gap-y-4 items-center rounded-md p-6'>
+                <TbBrandNextjs size={40} />
+                <div className='space-y-2'>
+                  <h3 className='font-bold leading-normal'>Add Faculty</h3>
+                  <p className='text-sm text-muted-foreground'>
+                    Add faculty to the database
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
           <Link href='/student/view'>
             <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center'>
               <div className='flex h-[180px] flex-col justify-center gap-y-4 items-center rounded-md p-6'>
@@ -67,18 +69,19 @@ export default function Page() {
               </div>
             </div>
           </Link>
-
-          <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center'>
-            <div className='flex h-[180px] flex-col justify-center gap-y-4 items-center rounded-md p-6'>
-              <TbBrandNextjs size={40} />
-              <div className='space-y-2'>
-                <h3 className='font-bold leading-normal'>View Teachers</h3>
-                <p className='text-sm text-muted-foreground'>
-                  View teachers in the database
-                </p>
+          <Link href='/faculty/view'>
+            <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center'>
+              <div className='flex h-[180px] flex-col justify-center gap-y-4 items-center rounded-md p-6'>
+                <TbBrandNextjs size={40} />
+                <div className='space-y-2'>
+                  <h3 className='font-bold leading-normal'>View Faculties</h3>
+                  <p className='text-sm text-muted-foreground'>
+                    View faculties in the database
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </section>
     </>

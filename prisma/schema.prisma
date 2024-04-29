@@ -22,3 +22,12 @@ model Student {
   email    String @unique
   phone    String @unique
 }
+
+model Faculty {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  uid      String @unique
+  password String
+  email    String @unique
+  phone    String @unique
+}
