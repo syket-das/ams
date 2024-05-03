@@ -82,6 +82,36 @@ export default function Page() {
               </div>
             </div>
           </Link>
+          <Link href='/course'>
+            <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center'>
+              <div className='flex h-[180px] flex-col justify-center gap-y-4 items-center rounded-md p-6'>
+                <TbBrandNextjs size={40} />
+                <div className='space-y-2'>
+                  <h3 className='font-bold leading-normal'>
+                    Course Management
+                  </h3>
+                  <p className='text-sm text-muted-foreground'>
+                    Manage courses in the database
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href='/section'>
+            <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center'>
+              <div className='flex h-[180px] flex-col justify-center gap-y-4 items-center rounded-md p-6'>
+                <TbBrandNextjs size={40} />
+                <div className='space-y-2'>
+                  <h3 className='font-bold leading-normal'>
+                    Section Management
+                  </h3>
+                  <p className='text-sm text-muted-foreground'>
+                    Manage sections in the database
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Link>
         </div>
       </section>
     </>

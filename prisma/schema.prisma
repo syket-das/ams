@@ -15,19 +15,63 @@ model Post {
 }
 
 model Student {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  regNo    String @unique
-  password String
-  email    String @unique
-  phone    String @unique
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  regNo     String   @unique
+  password  String
+  email     String   @unique
+  phone     String   @unique
+  Section   Section? @relation(fields: [sectionId], references: [id])
+  sectionId String?  @db.ObjectId
+
+  Attendenence   Attendenence? @relation(fields: [AttendenenceId], references: [id])
+  AttendenenceId String?       @db.ObjectId
 }
 
 model Faculty {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
   name     String
-  uid      String @unique
+  uid      String   @unique
   password String
-  email    String @unique
-  phone    String @unique
+  email    String   @unique
+  phone    String   @unique
+  Course   Course[]
+}
+
+model Section {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  students        Student[]
+  Attendenence    Attendenence[]
+  SectionOnCourse SectionOnCourse[]
+}
+
+model Course {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  code      String
+  credit    Int     @default(0)
+  faculty   Faculty @relation(fields: [facultyId], references: [id])
+  facultyId String  @db.ObjectId
+
+  Attendenence    Attendenence[]
+  SectionOnCourse SectionOnCourse[]
+}
+
+model SectionOnCourse {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  course    Course  @relation(fields: [courseId], references: [id])
+  courseId  String  @db.ObjectId
+  section   Section @relation(fields: [sectionId], references: [id])
+  sectionId String  @db.ObjectId
+}
+
+model Attendenence {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  date      DateTime
+  students  Student[]
+  course    Course    @relation(fields: [courseId], references: [id])
+  courseId  String    @db.ObjectId
+  section   Section   @relation(fields: [sectionId], references: [id])
+  sectionId String    @db.ObjectId
 }
