@@ -5,6 +5,7 @@ import { LuMoon, LuSun, LuMonitor } from 'react-icons/lu'
 import { useTheme } from 'next-themes'
 
 import { Button } from '@/components/ui/button'
+import { useEffect } from 'react'
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
@@ -21,6 +22,12 @@ export function ThemeToggle() {
     dark: LuMoon,
     system: LuMonitor
   }[theme!] as IconType
+
+  useEffect(() => {
+    if (theme === 'system') {
+      setTheme('light')
+    }
+  }, [theme])
 
   return (
     <Button
