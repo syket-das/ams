@@ -2,12 +2,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(request: Request) {
   try {
-    const attendence = await prisma.studentSeat.findMany({
-      include: {
-        student: true,
-        Attendenence: true
-      }
-    })
+    const attendence = await prisma.studentSeat.findMany({})
 
     return Response.json({
       success: true,
@@ -32,6 +27,33 @@ export async function POST(request: Request) {
       seatNo: any
       studentId: any
     } = await request.json()
+
+    const seatTaken = await prisma.studentSeat.findFirst({
+      where: {
+        seatNo
+      }
+    })
+
+    if (seatTaken) {
+      return Response.json({
+        success: false,
+        message: 'Seat already taken'
+      })
+    }
+
+    const attendenceExist = await prisma.studentSeat.findFirst({
+      where: {
+        attendenenceId,
+        studentId
+      }
+    })
+
+    if (attendenceExist) {
+      return Response.json({
+        success: false,
+        message: 'Student Attendence already exist'
+      })
+    }
 
     const attendence = await prisma.studentSeat.create({
       data: {

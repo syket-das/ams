@@ -74,7 +74,7 @@ model StudentOnAttendence {
   studentId      String       @db.ObjectId
   seatNo         Int
 
-  @@unique([attendenenceId, studentId])
+  @@unique([attendenenceId, studentId, seatNo])
 }
 
 model Attendenence {
