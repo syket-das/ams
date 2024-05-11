@@ -73,6 +73,8 @@ model StudentOnAttendence {
   student        Student      @relation(fields: [studentId], references: [id])
   studentId      String       @db.ObjectId
   seatNo         Int
+
+  @@unique([attendenenceId, studentId])
 }
 
 model Attendenence {
