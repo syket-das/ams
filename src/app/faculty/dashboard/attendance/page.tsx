@@ -4,42 +4,16 @@ import { Button } from '@/components/ui/button'
 import React from 'react'
 
 const page = () => {
-  const [students, setStudents] = React.useState([
-    {
-      id: 1,
-      name: 'John Doe',
-      regNo: '123456',
-      section: 'A'
-    },
-    {
-      id: 2,
-      name: 'John Doe',
-      regNo: '123456',
-      section: 'A'
-    },
-    {
-      id: 3,
-      name: 'John Doe',
-      regNo: '123456',
-      section: 'A'
-    },
-    {
-      id: 4,
-      name: 'John Doe',
-      regNo: '123456',
-      section: 'A'
-    }
-  ])
-
   const [presentStudents, setPresentStudents] = React.useState([])
-
-  const [hoveredID, setHoveredID] = React.useState(null)
+  const [students, setStudents] = React.useState([])
+  const [attendence, setAttendence] = React.useState(null)
 
   const [section, setSection] = React.useState(null)
   const [data, setData] = React.useState(null)
 
   React.useEffect(() => {
     setSection(JSON.parse(localStorage.getItem('section')))
+    setAttendence(JSON.parse(localStorage.getItem('attendence')))
   }, [])
 
   const fetchMore = async () => {
@@ -51,6 +25,18 @@ const page = () => {
 
     if (result.success) {
       setData(result.data.find(item => item.id === section?.id))
+    }
+  }
+
+  const fetchStudentsSeats = async () => {
+    const res = await fetch('/api/attendence/studentseat', {
+      method: 'GET'
+    })
+
+    const result = await res.json()
+
+    if (result.success) {
+      setStudents(result.data.filter(item => item.section.id === section.id))
     }
   }
 

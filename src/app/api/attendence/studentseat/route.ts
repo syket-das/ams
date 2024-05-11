@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     if (attendenceExist) {
       return Response.json({
         success: false,
-        message: 'Student Attendence already exist'
+        message: 'Student Attendence already exist' + attendenceExist.seatNo
       })
     }
 
