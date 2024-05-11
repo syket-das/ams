@@ -4,11 +4,14 @@ export async function POST(request: Request) {
   try {
     const { phone, password } = await request.json()
 
-    console.log(phone, password)
-
     const student = await prisma.student.findFirst({
       where: {
         phone: phone
+      },
+      include: {
+        Section: true,
+        Attendenence: true,
+        StudentSeat: true
       }
     })
 
