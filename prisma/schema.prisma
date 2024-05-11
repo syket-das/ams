@@ -26,6 +26,7 @@ model Student {
 
   Attendenence   Attendenence? @relation(fields: [AttendenenceId], references: [id])
   AttendenenceId String?       @db.ObjectId
+  StudentSeat    StudentSeat[]
 }
 
 model Faculty {
@@ -67,11 +68,26 @@ model SectionOnCourse {
 }
 
 model Attendenence {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  date      DateTime
-  students  Student[]
-  course    Course    @relation(fields: [courseId], references: [id])
-  courseId  String    @db.ObjectId
-  section   Section   @relation(fields: [sectionId], references: [id])
-  sectionId String    @db.ObjectId
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  date     DateTime
+  students Student[]
+  course   Course    @relation(fields: [courseId], references: [id])
+  courseId String    @db.ObjectId
+  section  Section   @relation(fields: [sectionId], references: [id])
+
+  sectionId String @db.ObjectId
+
+  studentSeat StudentSeat[]
+
+  submitted Boolean @default(false)
+}
+
+model StudentSeat {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @db.ObjectId
+
+  seatNo         Int
+  Attendenence   Attendenence? @relation(fields: [attendenenceId], references: [id])
+  attendenenceId String?       @db.ObjectId
 }

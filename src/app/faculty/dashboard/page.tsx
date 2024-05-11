@@ -1,116 +1,129 @@
 // @ts-nocheck
 'use client'
 import { Button } from '@/components/ui/button'
-import React from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import React, { useEffect } from 'react'
+import { TbBrandNextjs } from 'react-icons/tb'
 
 const page = () => {
-  const [students, setStudents] = React.useState([
-    {
-      id: 1,
-      name: 'John Doe',
-      regNo: '123456',
-      section: 'A'
-    },
-    {
-      id: 2,
-      name: 'John Doe',
-      regNo: '123456',
-      section: 'A'
-    },
-    {
-      id: 3,
-      name: 'John Doe',
-      regNo: '123456',
-      section: 'A'
-    },
-    {
-      id: 4,
-      name: 'John Doe',
-      regNo: '123456',
-      section: 'A'
+  const [faculty, setFaculty] = React.useState(null)
+  const [selected, setSelected] = React.useState({
+    course: null,
+    section: null
+  })
+
+  const [data, setData] = React.useState([])
+
+  const router = useRouter()
+
+  useEffect(() => {
+    setFaculty(JSON.parse(localStorage.getItem('faculty')))
+  }, [])
+
+  const fetchAttendence = async () => {
+    const res = await fetch('/api/attendence', {
+      method: 'GET'
+    })
+
+    const result = await res.json()
+
+    if (result.success) {
+      setData(
+        result.data.filter(item => {
+          return (
+            item.section.id === selected.section &&
+            item.course.id === selected.course
+          )
+        })
+      )
     }
-  ])
+  }
 
-  const [presentStudents, setPresentStudents] = React.useState([])
+  useEffect(() => {
+    if (selected.section && selected.course) {
+      fetchAttendence()
+    }
+  }, [selected])
 
-  const [hoveredID, setHoveredID] = React.useState(null)
+  const handleAttendence = async () => {
+    const res = await fetch('/api/attendence', {
+      method: 'POST',
+      body: JSON.stringify({
+        sectionId: selected.section,
+        courseId: selected.course
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    const result = await res.json()
+
+    if (result.success) {
+      fetchAttendence()
+    }
+  }
 
   return (
     <div className=''>
-      <div className=' flex items-center bg-gray-200'>
-        <div className='flex-1 mx-auto p-10'>
-          <ul className='grid grid-cols-12 grid-rows-4 gap-8 grid-flow-row'>
-            {students.map(student => {
-              const isPresent = presentStudents.some(
-                presentStudent => presentStudent.id === student.id
-              )
+      <div className='mx-auto flex  justify-center gap-4 '>
+        <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center flex-1'>
+          {faculty?.sectionOnCourseForFaculty.map(item => (
+            <div key={item.id} className='flex gap-4 items-center my-4'>
+              <TbBrandNextjs className='text-2xl' />
+              <span>
+                {item.course.name} ({item.course.code})
+              </span>
 
-              return (
-                <li key={student.id} className='rounded-lg '>
-                  <div
-                    onMouseEnter={() => setHoveredID(student.id)}
-                    onMouseLeave={() => setHoveredID(null)}
-                    onClick={() => {
-                      if (isPresent) {
-                        setPresentStudents(
-                          presentStudents.filter(
-                            presentStudent => presentStudent.id !== student.id
-                          )
-                        )
-                      } else {
-                        setPresentStudents([...presentStudents, student])
-                      }
-                    }}
-                    className='h-24 w-24 bg-white rounded-full flex items-center justify-center '
-                    style={{
-                      borderColor: isPresent ? 'green' : 'gray',
-                      borderWidth: '4px'
-                    }}
-                  >
-                    <img
-                      width='48'
-                      height='48'
-                      src='https://img.icons8.com/pulsar-line/48/user.png'
-                      alt='user'
-                      className='m-auto '
-                    />
-                  </div>
-                  <div
-                    className='bg-white h-8 w-24 rounded-md'
-                    style={{
-                      borderColor: isPresent ? 'green' : 'gray',
-                      borderWidth: '4px'
-                    }}
-                  >
-                    {hoveredID === student.id && (
-                      <span className='text-center'>{student.regNo}</span>
-                    )}
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-      </div>
+              <span className='ml-auto'>{item.section.name}</span>
+              <button
+                onClick={() => {
+                  localStorage.setItem('section', JSON.stringify(item.section))
+                  localStorage.setItem('course', JSON.stringify(item.course))
+                  setSelected({
+                    course: item.course.id,
+                    section: item.section.id
+                  })
+                }}
+                className='bg-green-500 text-white rounded-md p-2 ml-auto'
+              >
+                {selected.section === item.section.id ? 'Selected' : 'Select'}
+              </button>
+            </div>
+          ))}
+        </div>{' '}
+        <div className='cursor-pointer hover:border-green-500 relative overflow-hidden rounded-lg border bg-background p-2 text-center flex-1'>
+          <h1 className='text-2xl font-bold'>Attendence</h1>
 
-      <div className='w-full flex justify-between items-center mt-2'>
-        <div className='flex-1 flex gap-4'>
-          <h1 className='text-2xl font-bold text-center'>Head Count</h1>
-          <span className='text-2xl font-bold text-center'>
-            {presentStudents.length}
-          </span>
-        </div>
-        <div className='flex-1 flex gap-4'>
-          <h1 className='text-2xl font-bold text-center'>Empty Seats</h1>
-          <span className='text-2xl font-bold text-center'>
-            {students.length - presentStudents.length}
-          </span>
-        </div>
+          {selected.section && selected.course ? (
+            <Button
+              onClick={() => {
+                handleAttendence()
+              }}
+            >
+              Initiate Attendence
+            </Button>
+          ) : null}
 
-        <div className='flex-1'>
-          <Button className='w-full' onClick={() => {}}>
-            Mark Attendance
-          </Button>
+          <hr />
+          {data.map(item => (
+            <div key={item.id} className='flex gap-4 items-center my-4'>
+              <span>{item.date}</span>
+              <span className='ml-auto'>
+                {item.submitted ? 'Submitted' : 'Not Submitted'}
+              </span>
+              <button
+                onClick={() => {
+                  localStorage.setItem('attendence', JSON.stringify(item))
+                  router.push('/faculty/dashboard/attendance')
+                }}
+                className='bg-green-500 text-white rounded-md p-2 ml-auto'
+              >
+                View
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>

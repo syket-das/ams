@@ -17,6 +17,33 @@ export async function POST(request: Request) {
       })
     }
 
+    const sectionOnCourseForFaculty = await prisma.sectionOnCourse.findMany({
+      where: {
+        course: {
+          facultyId: faculty.id
+        }
+      },
+      include: {
+        section: true,
+        course: {
+          include: {
+            Attendenence: {
+              include: {
+                students: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    if (!faculty) {
+      return Response.json({
+        success: false,
+        message: 'Faculty not found'
+      })
+    }
+
     if (faculty.password !== password) {
       return Response.json({
         success: false,
@@ -26,7 +53,10 @@ export async function POST(request: Request) {
 
     return Response.json({
       success: true,
-      data: faculty
+      data: {
+        faculty,
+        sectionOnCourseForFaculty
+      }
     })
   } catch (error) {
     return Response.json({

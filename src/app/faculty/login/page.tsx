@@ -24,6 +24,7 @@ const page = () => {
     const result = await res.json()
 
     if (result.success) {
+      localStorage.setItem('faculty', JSON.stringify(result.data))
       router.push('/faculty/dashboard')
     } else {
       alert(result.message)
