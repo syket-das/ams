@@ -27,11 +27,7 @@ export async function POST(request: Request) {
         section: true,
         course: {
           include: {
-            Attendenence: {
-              include: {
-                students: true
-              }
-            }
+            Attendenence: true
           }
         }
       }

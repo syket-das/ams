@@ -4,14 +4,12 @@ export async function GET(request: Request, { params }) {
   const { id } = params
 
   try {
-    const students = await prisma.student.findFirst({
+    const students = await prisma.student.findUnique({
       where: {
         id
       },
       include: {
-        Section: true,
-        Attendenence: true,
-        StudentSeat: true
+        Section: true
       }
     })
 

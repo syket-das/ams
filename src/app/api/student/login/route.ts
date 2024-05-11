@@ -10,7 +10,7 @@ export async function POST(request: Request) {
       },
       include: {
         Section: true,
-        Attendenence: true,
+        StudentOnAttendence: true,
         StudentSeat: true
       }
     })
