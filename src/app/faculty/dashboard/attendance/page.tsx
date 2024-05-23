@@ -7,6 +7,7 @@ const page = () => {
   const [presentStudents, setPresentStudents] = React.useState([])
   const [students, setStudents] = React.useState([])
   const [attendence, setAttendence] = React.useState(null)
+  const [selectedIndexes, setSelectedIndexes] = React.useState([])
 
   const [section, setSection] = React.useState(null)
   const [data, setData] = React.useState(null)
@@ -36,7 +37,9 @@ const page = () => {
     const result = await res.json()
 
     if (result.success) {
-      setStudents(result.data.filter(item => item.section.id === section.id))
+      setStudents(
+        result.data.filter(item => item.attendenenceId === attendence.id)
+      )
     }
   }
 
@@ -44,8 +47,67 @@ const page = () => {
     fetchMore()
   }, [section])
 
+  React.useEffect(() => {
+    if (section) {
+      fetchStudentsSeats()
+    }
+  }, [section])
+
   if (!section) {
     return <div>Loading...</div>
+  }
+
+  const verifyAttendance = async () => {
+    const bookedSeats = students.map(student => {
+      return {
+        studentId: student.id,
+        seatNo: student.seatNo
+      }
+    })
+
+    const selectedSeats = selectedIndexes.map(index => {
+      return {
+        seatNo: index
+      }
+    })
+
+    if (bookedSeats.length !== selectedSeats.length) {
+      alert('Attendance not matched')
+      return
+    }
+    const matchedOrNot = selectedSeats.every(selectedSeat => {
+      return bookedSeats.some(bookedSeat => {
+        return bookedSeat.seatNo === selectedSeat.seatNo
+      })
+    })
+
+    if (!matchedOrNot) {
+      alert('Attendance not matched')
+      return
+    }
+
+    const modifiedStudents = students.map(student => {
+      return {
+        studentId: student.id,
+        seatNo: student.seatNo
+      }
+    })
+
+    const res = await fetch('/api/attendence', {
+      method: 'PUT',
+      body: JSON.stringify({
+        attendenenceId: attendence.id,
+        attendences: modifiedStudents
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    const result = await res.json()
+    if (result.success) {
+      alert('Attendance Marked')
+    }
   }
 
   return (
@@ -108,14 +170,35 @@ const page = () => {
           {/* only seats not students */}
 
           <div className='grid grid-cols-6 gap-4'>
-            {Array.from({ length: 36 }).map((_, index) => (
-              <div
-                key={index}
-                className='h-24 w-24 bg-white rounded-full flex items-center justify-center'
-              >
-                {index}
-              </div>
-            ))}
+            {Array.from({ length: 36 }).map((_, index) => {
+              const column = Math.floor(index / 6) + 1
+              const row = (index % 6) + 1
+              const label = `c${column}r${row}`
+
+              return (
+                <div
+                  onClick={() => {
+                    if (selectedIndexes.includes(label)) {
+                      setSelectedIndexes(
+                        selectedIndexes.filter(item => item !== label)
+                      )
+                    } else {
+                      setSelectedIndexes([...selectedIndexes, label])
+                    }
+                  }}
+                  style={{
+                    borderColor: selectedIndexes.includes(label)
+                      ? 'green'
+                      : 'gray',
+                    borderWidth: '4px'
+                  }}
+                  key={index}
+                  className='h-24 w-24 bg-white rounded-full flex items-center justify-center'
+                >
+                  {label}
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -124,18 +207,23 @@ const page = () => {
         <div className='flex-1 flex gap-4'>
           <h1 className='text-2xl font-bold text-center'>Head Count</h1>
           <span className='text-2xl font-bold text-center'>
-            {presentStudents.length}
+            {selectedIndexes.length}
           </span>
         </div>
         <div className='flex-1 flex gap-4'>
           <h1 className='text-2xl font-bold text-center'>Empty Seats</h1>
           <span className='text-2xl font-bold text-center'>
-            {data?.students.length - presentStudents.length}
+            {36 - selectedIndexes.length}
           </span>
         </div>
 
         <div className='flex-1'>
-          <Button className='w-full' onClick={() => {}}>
+          <Button
+            className='w-full'
+            onClick={() => {
+              verifyAttendance()
+            }}
+          >
             Mark Attendance
           </Button>
         </div>

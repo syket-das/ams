@@ -72,7 +72,7 @@ model StudentOnAttendence {
   attendenenceId String       @db.ObjectId
   student        Student      @relation(fields: [studentId], references: [id])
   studentId      String       @db.ObjectId
-  seatNo         Int
+  seatNo         String
 
   @@unique([attendenenceId, studentId, seatNo])
 }
@@ -98,7 +98,7 @@ model StudentSeat {
   student   Student @relation(fields: [studentId], references: [id])
   studentId String  @db.ObjectId
 
-  seatNo         Int
+  seatNo         String
   Attendenence   Attendenence? @relation(fields: [attendenenceId], references: [id])
   attendenenceId String?       @db.ObjectId
 }

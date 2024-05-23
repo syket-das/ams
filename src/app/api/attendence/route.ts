@@ -52,3 +52,35 @@ export async function POST(request: Request) {
     })
   }
 }
+
+export async function PUT(request: Request) {
+  try {
+    const { attendenenceId, attendences } = await request.json()
+
+    const attendence = await prisma.attendenence.update({
+      where: {
+        id: attendenenceId
+      },
+      data: {
+        StudentOnAttendence: {
+          createMany: {
+            data: [...attendences]
+          }
+        },
+        submitted: true
+      }
+    })
+
+    return Response.json({
+      success: true,
+      data: attendence
+    })
+  } catch (error) {
+    console.log(error)
+
+    return Response.json({
+      success: false,
+      message: error.message
+    })
+  }
+}
